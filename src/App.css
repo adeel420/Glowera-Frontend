@@ -5,3 +5,6 @@
 .red-text{
     font-family: "Covered By Your Grace", Sans-serif;
 }
+.cat::-webkit-scrollbar {
+  display: none;
+}

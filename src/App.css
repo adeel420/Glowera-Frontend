@@ -1,0 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Covered+By+Your+Grace&display=swap');
+.linear{
+    background: linear-gradient(100deg,rgba(148, 121, 114, 1) 0%, rgba(241, 229, 229, 1) 100%);
+}
+.red-text{
+    font-family: "Covered By Your Grace", Sans-serif;
+}

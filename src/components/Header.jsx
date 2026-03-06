@@ -4,8 +4,10 @@ import { IoIosHeartEmpty } from "react-icons/io";
 import { FiUser } from "react-icons/fi";
 import { IoCartOutline } from "react-icons/io5";
 import { navLinks } from "../data/Data";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
   return (
     <div>
       {/* Top Bar */}
@@ -35,13 +37,28 @@ const Header = () => {
 
         {/* Icons */}
         <div className="flex items-center gap-4">
-          <span className="text-2xl cursor-pointer hover:text-[#cfabae] transition-all">
+          <span
+            className="text-2xl cursor-pointer relative hover:text-[#cfabae] transition-all"
+            onClick={() => navigate("/wishlist")}
+          >
+            <span className="absolute h-4 w-4 rounded-full right-[-10px] top-[-10px] bg-[#be4543] text-white flex items-center justify-center text-xs ">
+              3
+            </span>
             <IoIosHeartEmpty />
           </span>
-          <span className="text-2xl cursor-pointer hover:text-[#cfabae] transition-all">
+          <span
+            className="text-2xl cursor-pointer hover:text-[#cfabae] transition-all"
+            onClick={() => navigate("/login")}
+          >
             <FiUser />
           </span>
-          <span className="text-2xl cursor-pointer hover:text-[#cfabae] transition-all">
+          <span
+            className="text-2xl cursor-pointer relative hover:text-[#cfabae] transition-all"
+            onClick={() => navigate("/cart")}
+          >
+            <span className="absolute h-4 w-4 rounded-full right-[-10px] top-[-10px] bg-[#be4543] text-white flex items-center justify-center text-xs ">
+              3
+            </span>
             <IoCartOutline />
           </span>
         </div>
@@ -51,13 +68,13 @@ const Header = () => {
       <div className="w-full border-b border-b-[#ccc]">
         <div className="flex overflow-x-auto whitespace-nowrap scrollbar-hide">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.id}
-              href={link.link}
+              to={link.link}
               className="px-4 py-3 hover:bg-[#cfabae] hover:text-white transition-all inline-block text-sm sm:text-base flex-shrink-0"
             >
               {link.title}
-            </a>
+            </Link>
           ))}
         </div>
       </div>

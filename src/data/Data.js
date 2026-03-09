@@ -1,4 +1,12 @@
 import { assets } from "../assets/assets";
+import { FaUsers } from "react-icons/fa";
+import { BiCategory } from "react-icons/bi";
+import { MdProductionQuantityLimits } from "react-icons/md";
+import { TbEdit } from "react-icons/tb";
+import { BsCart3 } from "react-icons/bs";
+import { GoMail } from "react-icons/go";
+import { IoNewspaperOutline } from "react-icons/io5";
+import { IoLogOutOutline } from "react-icons/io5";
 
 // Links
 export const navLinks = [
@@ -99,4 +107,16 @@ export const filterByPrice = [
   { id: 2, name: "501 Rs to 1500 Rs", min: 501, max: 1500 },
   { id: 3, name: "1501 Rs to 3000 Rs", min: 1501, max: 3000 },
   { id: 4, name: "Above 3000 Rs", min: 3001, max: 10000000000 },
+];
+
+// admin btns
+export const adminBtn = [
+  { id: 0, icon: FaUsers, title: "User Management" },
+  { id: 1, icon: BiCategory, title: "Categories Management" },
+  { id: 2, icon: MdProductionQuantityLimits, title: "Products Management" },
+  { id: 3, icon: TbEdit, title: "Update Products" },
+  { id: 4, icon: BsCart3, title: "Orders" },
+  { id: 5, icon: GoMail, title: "Contact Messages" },
+  { id: 6, icon: IoNewspaperOutline, title: "NewsLetter Emails" },
+  { id: 7, icon: IoLogOutOutline, title: "Logout" },
 ];

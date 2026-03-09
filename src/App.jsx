@@ -12,11 +12,13 @@ import Wishlist from "./pages/Wishlist";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Page_Not_Found from "./pages/Page_Not_Found";
+import Detailed from "./pages/Detailed";
+import Admin_Dashboard from "./pages/Admin_Dashboard";
 
 function App() {
   const location = useLocation();
 
-  const hidePaths = ["/login", "/signup"];
+  const hidePaths = ["/login", "/signup", "/admin-dashboard"];
   const hideHeaderFooter = hidePaths.includes(location.pathname);
   return (
     <>
@@ -31,6 +33,8 @@ function App() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/detail" element={<Detailed />} />
+        <Route path="/admin-dashboard" element={<Admin_Dashboard />} />
         <Route path="/*" element={<Page_Not_Found />} />
       </Routes>
       {!hideHeaderFooter && <Footer />}

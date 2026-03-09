@@ -10,7 +10,7 @@ const NewsLetter = () => {
   };
 
   return (
-    <div className="bg-gradient-to-r from-[#947972] to-[#f1e5e5] py-16 px-6">
+    <div className="bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 py-16 px-6">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="red-text text-[28px] lg:text-[32px] text-white mb-2">
           stay connected
@@ -29,11 +29,11 @@ const NewsLetter = () => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email address"
             required
-            className="flex-1 px-6 py-3 rounded-lg bg-white/95 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white"
+            className="flex-1 px-6 py-3 rounded-full bg-white/95 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white shadow-lg"
           />
           <button
             type="submit"
-            className="px-8 py-3 bg-white text-[#947972] font-semibold rounded-lg hover:bg-gray-100 transition-all duration-300 uppercase tracking-wide"
+            className="px-8 py-3 bg-white text-pink-500 font-semibold rounded-full hover:bg-pink-50 transition-all duration-300 uppercase tracking-wide shadow-lg hover:shadow-xl"
           >
             Subscribe
           </button>

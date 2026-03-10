@@ -1,14 +1,7 @@
 import React, { useState } from "react";
-import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { fetchSignup } from "../redux/slice/authSlices/signupSlice";
-import Loader from "../components/loader/Loader";
+import { Link } from "react-router-dom";
 
-const Signup = () => {
-  const { status } = useSelector((state) => state.signup);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+const Reset_Password = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,33 +12,12 @@ const Signup = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.password) {
-      return toast.error("All fields are required");
-    }
-    if (formData.password.length < 5) {
-      return toast.error("Password must be at least 5 characters");
-    }
-    if (formData.name.length < 3) {
-      return toast.error("Name must be at least 3 characters");
-    }
-    
-    const result = await dispatch(fetchSignup(formData));
-    
-    if (fetchSignup.fulfilled.match(result)) {
-      toast.success("Account created! Check your email for verification code");
-      setTimeout(() => {
-        navigate("/verify-email");
-      }, 1500);
-    } else {
-      toast.error(result.payload?.error || "Failed to sign up");
-    }
+    console.log(formData);
   };
-
   return (
     <div className="linear w-full min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden">
-      {status === "loading" && <Loader />}
       {/* Animated Background with Multiple Moving Blobs */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
@@ -66,17 +38,18 @@ const Signup = () => {
             </span>
           </h1>
           <h2 className="red-text text-[28px] bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent mt-3 animate-fade-in animation-delay-200">
-            🌸 join us today
+            🌸 reset your password
           </h2>
           <p className="text-gray-600 text-sm font-light mt-2 animate-fade-in animation-delay-400">
-            Create your account
+            Enter your new password below to securely update your account
+            password.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-bold uppercase tracking-wide bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2">
-              Full Name
+              New Password
             </label>
             <input
               type="text"
@@ -85,59 +58,17 @@ const Signup = () => {
               onChange={handleChange}
               required
               className="w-full px-4 py-3 rounded-xl border-2 border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
-              placeholder="John Doe"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-bold uppercase tracking-wide bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2">
-              Email Address
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-xl border-2 border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
-              placeholder="john@example.com"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-bold uppercase tracking-wide bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-xl border-2 border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
-              placeholder="Create a password"
+              placeholder="Create a new password"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 rounded-full font-bold uppercase tracking-wide hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+            className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 rounded-full font-bold uppercase tracking-wide hover:shadow-2xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
           >
-            Create Account
+            Reset Password
           </button>
         </form>
-
-        <div className="mt-8 text-center">
-          <p className="text-gray-600 text-sm">
-            Already have an account?{" "}
-            <Link
-              to="/login"
-              className="text-pink-600 font-bold hover:text-pink-700 hover:underline"
-            >
-              Sign In
-            </Link>
-          </p>
-        </div>
 
         {/* Decorative Elements with Animation */}
         <div className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-pink-400 to-rose-400 rounded-full opacity-60 animate-pulse"></div>
@@ -148,4 +79,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Reset_Password;

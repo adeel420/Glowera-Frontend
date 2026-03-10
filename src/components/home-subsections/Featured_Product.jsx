@@ -76,81 +76,120 @@ const Featured_Product = () => {
             {featuredProducts.map((product, index) => (
               <div
                 key={product.id}
-                className="group relative bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2 animate-fade-in-up"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className="group relative bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 cursor-pointer animate-fade-in-up"
+                style={{ animationDelay: `${index * 150}ms` }}
                 onClick={() => navigate("/detail")}
               >
-                {/* Product Image */}
-                <div className="relative overflow-hidden bg-gradient-to-br from-pink-50 to-rose-50 p-6 h-[250px] flex items-center justify-center">
-                  <img
-                    src={product.img}
-                    alt={product.name}
-                    className="w-full h-full object-contain transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-700"
-                  />
-                  
-                  {/* Discount Badge */}
-                  {product.discount && (
-                    <span className="absolute top-4 left-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs px-4 py-2 rounded-full font-bold shadow-lg animate-pulse">
-                      -{product.discount}% OFF
-                    </span>
-                  )}
+                {/* Animated Border Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-400 via-rose-400 to-pink-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+                <div className="absolute inset-[2px] bg-white rounded-3xl z-10"></div>
 
-                  {/* Quick Actions */}
-                  <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-                    <button
-                      onClick={(e) => toggleLike(product.id, e)}
-                      className="bg-white p-3 rounded-full shadow-lg hover:bg-pink-500 hover:text-white transition-all duration-300 transform hover:scale-110"
-                    >
-                      {likedProducts.includes(product.id) ? (
-                        <IoHeart className="text-pink-500" size={20} />
-                      ) : (
-                        <IoHeartOutline size={20} />
-                      )}
-                    </button>
-                    <button className="bg-white p-3 rounded-full shadow-lg hover:bg-pink-500 hover:text-white transition-all duration-300 transform hover:scale-110">
-                      <IoEyeOutline size={20} />
-                    </button>
+                {/* Content */}
+                <div className="relative z-20">
+                  {/* Product Image */}
+                  <div className="relative overflow-hidden bg-gradient-to-br from-pink-50 to-rose-50 p-6 h-[280px] flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-pink-100 group-hover:to-rose-100 transition-all duration-500">
+                    {/* Sparkle Effect */}
+                    <div className="absolute top-4 right-4 w-2 h-2 bg-pink-400 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping"></div>
+                    <div className="absolute bottom-8 left-6 w-1.5 h-1.5 bg-rose-400 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping animation-delay-200"></div>
+                    
+                    <img
+                      src={product.img}
+                      alt={product.name}
+                      className="w-full h-full object-contain transform group-hover:scale-110 group-hover:rotate-2 transition-all duration-700 drop-shadow-lg"
+                    />
+                    
+                    {/* Discount Badge */}
+                    {product.discount && (
+                      <div className="absolute top-4 left-4 animate-bounce-slow">
+                        <div className="relative">
+                          <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full blur-md opacity-75"></div>
+                          <span className="relative block bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs px-4 py-2 rounded-full font-bold shadow-xl">
+                            🎉 {product.discount}% OFF
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Quick Actions */}
+                    <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-8 group-hover:translate-x-0">
+                      <button
+                        onClick={(e) => toggleLike(product.id, e)}
+                        className="bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all duration-300 transform hover:scale-125 hover:rotate-12"
+                      >
+                        {likedProducts.includes(product.id) ? (
+                          <IoHeart className="text-pink-500" size={20} />
+                        ) : (
+                          <IoHeartOutline size={20} />
+                        )}
+                      </button>
+                      <button className="bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all duration-300 transform hover:scale-125 hover:rotate-12">
+                        <IoEyeOutline size={20} />
+                      </button>
+                    </div>
+
+                    {/* Shimmer Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-30 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                   </div>
 
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-pink-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                </div>
-
-                {/* Product Info */}
-                <div className="p-6">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-pink-500 mb-2">
-                    {product.category}
-                  </h3>
-                  <h2 className="text-lg font-semibold text-gray-800 mb-3 group-hover:text-pink-600 transition-colors duration-300 line-clamp-2">
-                    {product.name}
-                  </h2>
-                  
-                  {/* Rating */}
-                  <div className="flex items-center gap-1 mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <span key={i} className="text-yellow-400 text-sm">★</span>
-                    ))}
-                    <span className="text-xs text-gray-500 ml-1">(4.9)</span>
-                  </div>
-
-                  {/* Price */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
-                        ${product.price}
+                  {/* Product Info */}
+                  <div className="p-6 relative">
+                    {/* Category Badge */}
+                    <div className="inline-block mb-3">
+                      <span className="text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">
+                        {product.category}
                       </span>
+                    </div>
+                    
+                    <h2 className="text-lg font-bold text-gray-800 mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-pink-600 group-hover:to-rose-600 group-hover:bg-clip-text transition-all duration-300 line-clamp-2 min-h-[56px]">
+                      {product.name}
+                    </h2>
+                    
+                    {/* Rating */}
+                    <div className="flex items-center gap-1 mb-4">
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i} className="text-yellow-400 text-base transform group-hover:scale-110 transition-transform duration-300" style={{ transitionDelay: `${i * 50}ms` }}>★</span>
+                        ))}
+                      </div>
+                      <span className="text-xs text-gray-500 ml-1 font-semibold">(4.9)</span>
+                    </div>
+
+                    {/* Price Section */}
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+                          ${product.price}
+                        </span>
+                        {product.originalPrice && (
+                          <span className="text-sm text-gray-400 line-through">
+                            ${product.originalPrice}
+                          </span>
+                        )}
+                      </div>
                       {product.originalPrice && (
-                        <span className="text-sm text-gray-400 line-through">
-                          ${product.originalPrice}
+                        <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                          Save ${product.originalPrice - product.price}
                         </span>
                       )}
                     </div>
-                  </div>
 
-                  {/* Add to Cart Button */}
-                  <button className="w-full mt-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-full font-semibold opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 hover:shadow-lg hover:scale-105">
-                    Add to Cart
-                  </button>
+                    {/* Add to Cart Button */}
+                    <button className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3.5 rounded-full font-bold opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 hover:shadow-2xl hover:scale-105 relative overflow-hidden">
+                      <span className="relative z-10 flex items-center justify-center gap-2">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Add to Cart
+                      </span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-rose-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+                    </button>
+
+                    {/* Stock Indicator */}
+                    <div className="mt-3 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="text-xs text-gray-600 font-medium">In Stock - Fast Shipping</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}

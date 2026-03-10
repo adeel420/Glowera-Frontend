@@ -2,17 +2,15 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchSignup } from "../redux/slice/authSlices/signupSlice";
+import { fetchverify } from "../redux/slice/authSlices/verifySlice";
 import Loader from "../components/loader/Loader";
 
-const Signup = () => {
-  const { status } = useSelector((state) => state.signup);
+const Verify_Email = () => {
+  const { status } = useSelector((state) => state.verify);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
+    code: "",
   });
 
   const handleChange = (e) => {
@@ -21,28 +19,21 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.password) {
-      return toast.error("All fields are required");
-    }
-    if (formData.password.length < 5) {
-      return toast.error("Password must be at least 5 characters");
-    }
-    if (formData.name.length < 3) {
-      return toast.error("Name must be at least 3 characters");
+    if (!formData.code) {
+      return toast.error("Please enter the OTP");
     }
     
-    const result = await dispatch(fetchSignup(formData));
+    const result = await dispatch(fetchverify(formData));
     
-    if (fetchSignup.fulfilled.match(result)) {
-      toast.success("Account created! Check your email for verification code");
+    if (fetchverify.fulfilled.match(result)) {
+      toast.success("Email verified successfully");
       setTimeout(() => {
-        navigate("/verify-email");
+        navigate("/login");
       }, 1500);
     } else {
-      toast.error(result.payload?.error || "Failed to sign up");
+      toast.error(result.payload?.error || "Invalid verification code");
     }
   };
-
   return (
     <div className="linear w-full min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden">
       {status === "loading" && <Loader />}
@@ -66,56 +57,27 @@ const Signup = () => {
             </span>
           </h1>
           <h2 className="red-text text-[28px] bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent mt-3 animate-fade-in animation-delay-200">
-            🌸 join us today
+            🌸 verify your email
           </h2>
           <p className="text-gray-600 text-sm font-light mt-2 animate-fade-in animation-delay-400">
-            Create your account
+            Please check your inbox and verify your email to activate your
+            account.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-bold uppercase tracking-wide bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2">
-              Full Name
+              OTP
             </label>
             <input
               type="text"
-              name="name"
-              value={formData.name}
+              name="code"
+              value={formData.code}
               onChange={handleChange}
               required
               className="w-full px-4 py-3 rounded-xl border-2 border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
-              placeholder="John Doe"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-bold uppercase tracking-wide bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2">
-              Email Address
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-xl border-2 border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
-              placeholder="john@example.com"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-bold uppercase tracking-wide bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-xl border-2 border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
-              placeholder="Create a password"
+              placeholder="098765"
             />
           </div>
 
@@ -123,21 +85,9 @@ const Signup = () => {
             type="submit"
             className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 rounded-full font-bold uppercase tracking-wide hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
           >
-            Create Account
+            Verify
           </button>
         </form>
-
-        <div className="mt-8 text-center">
-          <p className="text-gray-600 text-sm">
-            Already have an account?{" "}
-            <Link
-              to="/login"
-              className="text-pink-600 font-bold hover:text-pink-700 hover:underline"
-            >
-              Sign In
-            </Link>
-          </p>
-        </div>
 
         {/* Decorative Elements with Animation */}
         <div className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-pink-400 to-rose-400 rounded-full opacity-60 animate-pulse"></div>
@@ -148,4 +98,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Verify_Email;

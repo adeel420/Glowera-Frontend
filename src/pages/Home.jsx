@@ -1,5 +1,3 @@
-import React from "react";
-import { assets } from "../assets/assets";
 import Hero_Section from "../components/home-subsections/Hero_Section";
 import Featured_Category from "../components/home-subsections/Featured_Category";
 import Featured_Product from "../components/home-subsections/Featured_Product";

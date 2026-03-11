@@ -1,23 +1,48 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { fetchReset } from "../redux/slice/authSlices/resetSlice";
+import Loader from "../components/loader/Loader";
 
 const Reset_Password = () => {
+  const { status } = useSelector((state) => state.reset);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
-    password: "",
+    otp: "",
+    newPassword: "",
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    if (!formData.email || !formData.otp || !formData.newPassword) {
+      return toast.error("Please fill all fields");
+    }
+    if (formData.otp.length < 6) {
+      return toast.error("OTP must be 6 digits long");
+    }
+    if (formData.newPassword.length < 5) {
+      return toast.error("Password must be at least 5 characters long");
+    }
+    const result = await dispatch(fetchReset(formData));
+    if (fetchReset.fulfilled.match(result)) {
+      toast.success("Password reset successfully");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+    } else {
+      toast.error(result.payload?.error || result.payload?.message || "Failed to reset password");
+    }
   };
   return (
     <div className="linear w-full min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden">
+      {status === "loading" && <Loader />}
       {/* Animated Background with Multiple Moving Blobs */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
@@ -49,12 +74,42 @@ const Reset_Password = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-bold uppercase tracking-wide bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2">
-              New Password
+              Email Address
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-3 rounded-xl border-2 border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+              placeholder="john@gmail.com"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold uppercase tracking-wide bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2">
+              OTP
             </label>
             <input
               type="text"
-              name="name"
-              value={formData.name}
+              name="otp"
+              value={formData.otp}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-3 rounded-xl border-2 border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+              placeholder="098765"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold uppercase tracking-wide bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2">
+              New Password
+            </label>
+            <input
+              type="password"
+              name="newPassword"
+              value={formData.newPassword}
               onChange={handleChange}
               required
               className="w-full px-4 py-3 rounded-xl border-2 border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"

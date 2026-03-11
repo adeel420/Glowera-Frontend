@@ -30,7 +30,8 @@ const Hero_Section = () => {
             </h1>
 
             <p className="text-gray-700 font-light text-[16px] sm:text-[18px] lg:text-[20px] mt-6 max-w-lg animate-slide-in-left animation-delay-400">
-              Discover our exclusive collection of premium skincare products designed to enhance your natural beauty.
+              Discover our exclusive collection of premium skincare products
+              designed to enhance your natural beauty.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mt-8 animate-slide-in-left animation-delay-600">
@@ -46,15 +47,21 @@ const Hero_Section = () => {
             {/* Stats */}
             <div className="flex gap-8 mt-12 animate-fade-in animation-delay-800">
               <div className="text-center">
-                <h3 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">500+</h3>
+                <h3 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+                  500+
+                </h3>
                 <p className="text-sm text-gray-600 mt-1">Products</p>
               </div>
               <div className="text-center">
-                <h3 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">50K+</h3>
+                <h3 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+                  50K+
+                </h3>
                 <p className="text-sm text-gray-600 mt-1">Happy Customers</p>
               </div>
               <div className="text-center">
-                <h3 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">4.9★</h3>
+                <h3 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+                  4.9★
+                </h3>
                 <p className="text-sm text-gray-600 mt-1">Rating</p>
               </div>
             </div>
@@ -67,13 +74,13 @@ const Hero_Section = () => {
             {/* Decorative circles */}
             <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-pink-400 to-rose-400 rounded-full opacity-60 animate-pulse"></div>
             <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-gradient-to-br from-rose-400 to-pink-400 rounded-full opacity-40 animate-pulse animation-delay-1000"></div>
-            
+
             <img
               src={assets.heroImg}
               alt="Hero"
               className="relative w-[85%] sm:w-[70%] lg:w-full max-w-[550px] drop-shadow-2xl transform hover:scale-105 transition-transform duration-500"
             />
-            
+
             {/* Floating badge */}
             <div className="absolute top-10 -left-6 bg-white rounded-2xl shadow-2xl p-4 animate-bounce-slow">
               <div className="flex items-center gap-3">

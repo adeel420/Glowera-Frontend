@@ -92,9 +92,9 @@ const Header = () => {
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-[200px] bg-white rounded-2xl shadow-2xl border-2 border-pink-200 py-2 z-[9999] animate-fade-in-up">
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate("/admin_dashboard");
+                    type="button"
+                    onClick={() => {
+                      navigate("/admin-dashboard");
                       setIsDropdownOpen(false);
                     }}
                     className="w-full px-4 py-3 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white text-left flex items-center gap-3 text-gray-700 font-semibold transition-all cursor-pointer"
@@ -102,8 +102,8 @@ const Header = () => {
                     <MdDashboard className="text-xl" /> Admin Panel
                   </button>
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
+                    type="button"
+                    onClick={() => {
                       navigate("/dashboard");
                       setIsDropdownOpen(false);
                     }}
@@ -112,8 +112,8 @@ const Header = () => {
                     <MdDashboard className="text-xl" /> My Dashboard
                   </button>
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
+                    type="button"
+                    onClick={() => {
                       handleLogout();
                     }}
                     className="w-full px-4 py-3 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white text-left flex items-center gap-3 text-gray-700 font-semibold transition-all cursor-pointer"
@@ -257,31 +257,34 @@ const Header = () => {
                   {isDropdownOpen && (
                     <div className="absolute left-0 bottom-full mb-2 w-[200px] bg-white rounded-2xl shadow-2xl border-2 border-pink-200 py-2 z-50 animate-fade-in-up">
                       <button
+                        type="button"
                         onClick={() => {
-                          navigate("/admin_dashboard");
+                          navigate("/admin-dashboard");
                           setIsDropdownOpen(false);
                           setIsMenuOpen(false);
                         }}
-                        className="w-full px-4 py-3 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white text-left flex items-center gap-3 text-gray-700 font-semibold transition-all"
+                        className="w-full px-4 py-3 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white text-left flex items-center gap-3 text-gray-700 font-semibold transition-all cursor-pointer"
                       >
                         <MdDashboard className="text-xl" /> Admin Panel
                       </button>
                       <button
+                        type="button"
                         onClick={() => {
                           navigate("/dashboard");
                           setIsDropdownOpen(false);
                           setIsMenuOpen(false);
                         }}
-                        className="w-full px-4 py-3 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white text-left flex items-center gap-3 text-gray-700 font-semibold transition-all"
+                        className="w-full px-4 py-3 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white text-left flex items-center gap-3 text-gray-700 font-semibold transition-all cursor-pointer"
                       >
                         <MdDashboard className="text-xl" /> My Dashboard
                       </button>
                       <button
+                        type="button"
                         onClick={() => {
                           handleLogout();
                           setIsMenuOpen(false);
                         }}
-                        className="w-full px-4 py-3 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white text-left flex items-center gap-3 text-gray-700 font-semibold transition-all"
+                        className="w-full px-4 py-3 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white text-left flex items-center gap-3 text-gray-700 font-semibold transition-all cursor-pointer"
                       >
                         <MdLogout className="text-xl" /> Logout
                       </button>

@@ -1,23 +1,37 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchForget } from "../redux/slice/authSlices/forgetSlice";
+import toast from "react-hot-toast";
+import Loader from "../components/loader/Loader";
 
 const Forget_Password = () => {
+  const { status } = useSelector((state) => state.forget);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
-    password: "",
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    const result = await dispatch(fetchForget(formData));
+    if (fetchForget.fulfilled.match(result)) {
+      toast.success("OTP sent to your email!");
+      setTimeout(() => {
+        navigate("/reset-password");
+      }, 1500);
+    } else {
+      toast.error(result.payload?.error || result.payload?.message || "Failed to send OTP");
+    }
   };
   return (
     <div className="linear w-full min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden">
+      {status === "loading" && <Loader />}
       {/* Animated Background with Multiple Moving Blobs */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>

@@ -28,7 +28,7 @@ const Admin_Dashboard = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed md:relative w-80 h-full bg-gradient-to-br from-pink-500 via-rose-500 to-pink-600 text-white shadow-2xl z-40 transition-transform duration-300 ${
+        className={`fixed md:sticky md:top-0 w-80 h-full bg-gradient-to-br from-pink-500 via-rose-500 to-pink-600 text-white shadow-2xl z-40 transition-transform duration-300 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
@@ -57,7 +57,7 @@ const Admin_Dashboard = () => {
                   setActiveBtn(btn.id);
                   setSidebarOpen(false);
                 }}
-                className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl transition-all duration-300 animate-fade-in-up ${
+                className={`w-full flex cursor-pointer items-center gap-4 px-5 py-4 rounded-xl transition-all duration-300 animate-fade-in-up ${
                   activeBtn === btn.id
                     ? "bg-white text-pink-600 shadow-xl scale-105"
                     : "text-white hover:bg-white/20 backdrop-blur-sm"
@@ -87,19 +87,27 @@ const Admin_Dashboard = () => {
           <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-pink-200">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
-                <p className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">156</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+                  156
+                </p>
                 <p className="text-gray-600 text-sm">Total Orders</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">48</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+                  48
+                </p>
                 <p className="text-gray-600 text-sm">Products</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">5</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+                  5
+                </p>
                 <p className="text-gray-600 text-sm">Users</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">$12.5K</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+                  $12.5K
+                </p>
                 <p className="text-gray-600 text-sm">Revenue</p>
               </div>
             </div>

@@ -6,7 +6,7 @@ import { FiMenu, FiX } from "react-icons/fi";
 import User_Management from "../components/admin_dashboard-subsections/User_Management";
 import Categories_Management from "../components/admin_dashboard-subsections/Categories_Management";
 import Products_Management from "../components/admin_dashboard-subsections/Products_Management";
-import Update_Products from "../components/admin_dashboard-subsections/Update_Products";
+import Account_Settings from "../components/admin_dashboard-subsections/Account_Settings";
 import Orders from "../components/admin_dashboard-subsections/Orders";
 import Contact_Messages from "../components/admin_dashboard-subsections/Contact_Messages";
 import Newsletter_Emails from "../components/admin_dashboard-subsections/Newsletter_Emails";
@@ -28,7 +28,7 @@ const Admin_Dashboard = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed md:sticky md:top-0 w-80 h-full bg-gradient-to-br from-pink-500 via-rose-500 to-pink-600 text-white shadow-2xl z-40 transition-transform duration-300 ${
+        className={`fixed md:sticky md:top-0 w-72 md:w-80 h-screen overflow-x-hidden overflow-y-auto bg-gradient-to-br from-pink-500 via-rose-500 to-pink-600 text-white shadow-2xl z-40 transition-transform duration-300 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
@@ -38,13 +38,15 @@ const Admin_Dashboard = () => {
 
         <div className="relative p-6">
           {/* Header */}
-          <div className="flex items-center gap-4 mb-8 animate-fade-in-up">
-            <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg">
-              <span className="text-3xl font-bold">G</span>
+          <div className="flex items-center gap-3 mb-6 md:mb-8 animate-fade-in-up">
+            <div className="w-12 h-12 md:w-14 md:h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg">
+              <span className="text-2xl md:text-3xl font-bold">G</span>
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Admin Panel</h1>
-              <p className="text-white/80 text-sm">Glowera Management</p>
+              <h1 className="text-xl md:text-2xl font-bold">Admin Panel</h1>
+              <p className="text-white/80 text-xs md:text-sm">
+                Glowera Management
+              </p>
             </div>
           </div>
 
@@ -57,15 +59,17 @@ const Admin_Dashboard = () => {
                   setActiveBtn(btn.id);
                   setSidebarOpen(false);
                 }}
-                className={`w-full flex cursor-pointer items-center gap-4 px-5 py-4 rounded-xl transition-all duration-300 animate-fade-in-up ${
+                className={`w-full flex cursor-pointer items-center gap-3 md:gap-4 px-4 md:px-5 py-3 md:py-4 rounded-xl transition-all duration-300 animate-fade-in-up text-sm md:text-base ${
                   activeBtn === btn.id
                     ? "bg-white text-pink-600 shadow-xl scale-105"
                     : "text-white hover:bg-white/20 backdrop-blur-sm"
                 }`}
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <btn.icon className="text-xl" />
-                <span className="font-semibold">{btn.title}</span>
+                <btn.icon className="text-lg md:text-xl" />
+                <span className="font-semibold text-sm md:text-base">
+                  {btn.title}
+                </span>
               </button>
             ))}
           </div>
@@ -81,9 +85,9 @@ const Admin_Dashboard = () => {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 p-4 md:p-8 overflow-auto">
+      <div className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 overflow-auto mt-16 md:mt-0">
         {/* Header Stats Bar */}
-        <div className="mb-8 animate-fade-in-up">
+        {/* <div className="mb-8 animate-fade-in-up">
           <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-pink-200">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
@@ -112,14 +116,14 @@ const Admin_Dashboard = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Content Area */}
         <div className="animate-fade-in-up animation-delay-200">
           {activeBtn === 0 && <User_Management />}
           {activeBtn === 1 && <Categories_Management />}
           {activeBtn === 2 && <Products_Management />}
-          {activeBtn === 3 && <Update_Products />}
+          {activeBtn === 3 && <Account_Settings />}
           {activeBtn === 4 && <Orders />}
           {activeBtn === 5 && <Contact_Messages />}
           {activeBtn === 6 && <Newsletter_Emails />}

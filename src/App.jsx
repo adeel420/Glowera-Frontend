@@ -59,7 +59,7 @@ function App() {
         <Route path="/verify-email" element={<Verify_Email />} />
         <Route path="/forget-password" element={<Forget_Password />} />
         <Route path="/reset-password" element={<Reset_Password />} />
-        <Route path="/detail" element={<Detailed />} />
+        <Route path="/detail/:id" element={<Detailed />} />
         <Route path="/admin-dashboard" element={<Admin_Dashboard />} />
         <Route path="/*" element={<Page_Not_Found />} />
       </Routes>

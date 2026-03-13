@@ -9,6 +9,7 @@ import { MdProductionQuantityLimits } from "react-icons/md";
 import toast from "react-hot-toast";
 
 import axios from "axios";
+import { fetchCategories } from "../../redux/slice/categoriesSlice";
 
 const Products_Management = () => {
   const dispatch = useDispatch();
@@ -18,7 +19,6 @@ const Products_Management = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  // const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
     subtitle: "",
@@ -86,7 +86,22 @@ const Products_Management = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    setFormData((prev) => {
+      const updated = { ...prev, [name]: value };
+
+      const exact = parseFloat(updated.exactPrice);
+      const discount = parseFloat(updated.discountPrice);
+
+      if (exact && discount) {
+        updated.discountPercentage = (
+          ((exact - discount) / exact) *
+          100
+        ).toFixed(2);
+      }
+
+      return updated;
+    });
   };
 
   const handleAddColor = () => {
@@ -281,7 +296,7 @@ const Products_Management = () => {
         />
         <button
           onClick={handleAddProduct}
-          className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-4 rounded-2xl font-bold uppercase tracking-wide hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center gap-3 whitespace-nowrap"
+          className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-4 rounded-2xl font-bold uppercase tracking-wide hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center gap-3 cursor-pointer whitespace-nowrap"
         >
           <FaPlus /> Add Product
         </button>
@@ -374,7 +389,7 @@ const Products_Management = () => {
                   name="discountPercentage"
                   value={formData.discountPercentage}
                   onChange={handleInputChange}
-                  step="0.01"
+                  readOnly
                   className="w-full px-4 py-3 border-2 border-pink-200 rounded-xl focus:outline-none focus:border-pink-500 transition-all"
                   placeholder="0"
                 />
@@ -512,14 +527,42 @@ const Products_Management = () => {
             <div className="flex gap-3">
               <button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-xl font-bold hover:shadow-lg transition-all"
+                disabled={status === "loading"}
+                className="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Add Product
+                {status === "loading" ? (
+                  <>
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Adding...
+                  </>
+                ) : (
+                  "Add Product"
+                )}
               </button>
               <button
                 type="button"
                 onClick={() => setShowAddForm(false)}
-                className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all"
+                disabled={status === "loading"}
+                className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>
@@ -788,9 +831,36 @@ const Products_Management = () => {
             <div className="flex gap-3">
               <button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-xl font-bold hover:shadow-lg transition-all"
+                disabled={status === "loading"}
+                className="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Update Product
+                {status === "loading" ? (
+                  <>
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Updating...
+                  </>
+                ) : (
+                  "Update Product"
+                )}
               </button>
               <button
                 type="button"
@@ -798,7 +868,8 @@ const Products_Management = () => {
                   setShowEditForm(false);
                   setSelectedProduct(null);
                 }}
-                className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all"
+                disabled={status === "loading"}
+                className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>
@@ -914,14 +985,14 @@ const Products_Management = () => {
                       <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() => handleEditProduct(product)}
-                          className="text-pink-600 hover:text-pink-800 transition-colors p-2 hover:bg-pink-50 rounded-lg font-semibold"
+                          className="text-pink-600 hover:text-pink-800 transition-colors p-2 hover:bg-pink-50 rounded-lg font-semibold cursor-pointer"
                           title="Edit Product"
                         >
                           <FaEdit size={18} />
                         </button>
                         <button
                           onClick={() => handleDelete(product._id)}
-                          className="text-red-600 hover:text-red-800 transition-colors p-2 hover:bg-red-50 rounded-lg font-semibold"
+                          className="text-red-600 hover:text-red-800 transition-colors p-2 hover:bg-red-50 rounded-lg font-semibold cursor-pointer"
                           title="Delete Product"
                         >
                           <FaTrash size={18} />

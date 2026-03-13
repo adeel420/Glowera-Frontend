@@ -2,11 +2,11 @@ import { assets } from "../assets/assets";
 import { FaUsers } from "react-icons/fa";
 import { BiCategory } from "react-icons/bi";
 import { MdProductionQuantityLimits } from "react-icons/md";
-import { TbEdit } from "react-icons/tb";
 import { BsCart3 } from "react-icons/bs";
 import { GoMail } from "react-icons/go";
 import { IoNewspaperOutline } from "react-icons/io5";
 import { IoLogOutOutline } from "react-icons/io5";
+import { MdOutlineAccountBalance } from "react-icons/md";
 
 // Links
 export const navLinks = [
@@ -114,7 +114,7 @@ export const adminBtn = [
   { id: 0, icon: FaUsers, title: "User Management" },
   { id: 1, icon: BiCategory, title: "Categories Management" },
   { id: 2, icon: MdProductionQuantityLimits, title: "Products Management" },
-  { id: 3, icon: TbEdit, title: "Update Products" },
+  { id: 3, icon: MdOutlineAccountBalance, title: "Account Settings" },
   { id: 4, icon: BsCart3, title: "Orders" },
   { id: 5, icon: GoMail, title: "Contact Messages" },
   { id: 6, icon: IoNewspaperOutline, title: "NewsLetter Emails" },

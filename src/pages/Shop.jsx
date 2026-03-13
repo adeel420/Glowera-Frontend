@@ -17,6 +17,10 @@ const Shop = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     dispatch(fetchAllProducts());
   }, [dispatch]);
 

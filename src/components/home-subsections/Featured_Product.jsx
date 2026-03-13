@@ -1,12 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { assets } from "../../assets/assets";
-import { featuredProducts } from "../../data/Data";
 import { useNavigate } from "react-router-dom";
 import { IoHeartOutline, IoHeart, IoEyeOutline } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllProducts } from "../../redux/slice/productsSlice";
 
 const Featured_Product = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [likedProducts, setLikedProducts] = useState([]);
+  const { products } = useSelector((state) => state.products);
+
+  useEffect(() => {
+    dispatch(fetchAllProducts());
+  }, [dispatch]);
+
+  // Get latest 8 products
+  const featuredProducts = products.slice(0, 8);
 
   const toggleLike = (productId, e) => {
     e.stopPropagation();
@@ -78,7 +88,7 @@ const Featured_Product = () => {
                 key={product.id}
                 className="group relative bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 cursor-pointer animate-fade-in-up"
                 style={{ animationDelay: `${index * 150}ms` }}
-                onClick={() => navigate("/detail")}
+                onClick={() => navigate(`/detail/${product._id}`)}
               >
                 {/* Animated Border Gradient */}
                 <div className="absolute inset-0 bg-gradient-to-r from-pink-400 via-rose-400 to-pink-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
@@ -93,18 +103,18 @@ const Featured_Product = () => {
                     <div className="absolute bottom-8 left-6 w-1.5 h-1.5 bg-rose-400 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping animation-delay-200"></div>
                     
                     <img
-                      src={product.img}
+                      src={product.images?.[0] || assets.heroImg}
                       alt={product.name}
                       className="w-full h-full object-contain transform group-hover:scale-110 group-hover:rotate-2 transition-all duration-700 drop-shadow-lg"
                     />
                     
                     {/* Discount Badge */}
-                    {product.discount && (
+                    {product.discountPercentage > 0 && (
                       <div className="absolute top-4 left-4 animate-bounce-slow">
                         <div className="relative">
                           <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full blur-md opacity-75"></div>
                           <span className="relative block bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs px-4 py-2 rounded-full font-bold shadow-xl">
-                            🎉 {product.discount}% OFF
+                            🎉 {product.discountPercentage}% OFF
                           </span>
                         </div>
                       </div>
@@ -136,12 +146,12 @@ const Featured_Product = () => {
                     {/* Category Badge */}
                     <div className="inline-block mb-3">
                       <span className="text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">
-                        {product.category}
+                        {product.category?.name || "Product"}
                       </span>
                     </div>
                     
                     <h2 className="text-lg font-bold text-gray-800 mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-pink-600 group-hover:to-rose-600 group-hover:bg-clip-text transition-all duration-300 line-clamp-2 min-h-[56px]">
-                      {product.name}
+                      {product.title}
                     </h2>
                     
                     {/* Rating */}
@@ -158,17 +168,17 @@ const Featured_Product = () => {
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
                         <span className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
-                          ${product.price}
+                          Rs {product.exactPrice}
                         </span>
-                        {product.originalPrice && (
+                        {product.discountPrice > 0 && (
                           <span className="text-sm text-gray-400 line-through">
-                            ${product.originalPrice}
+                            Rs {product.discountPrice}
                           </span>
                         )}
                       </div>
-                      {product.originalPrice && (
+                      {product.discountPrice > 0 && (
                         <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                          Save ${product.originalPrice - product.price}
+                          Save Rs {product.discountPrice}
                         </span>
                       )}
                     </div>
@@ -186,8 +196,10 @@ const Featured_Product = () => {
 
                     {/* Stock Indicator */}
                     <div className="mt-3 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                      <span className="text-xs text-gray-600 font-medium">In Stock - Fast Shipping</span>
+                      <div className={`w-2 h-2 rounded-full animate-pulse ${product.stock > 0 ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                      <span className="text-xs text-gray-600 font-medium">
+                        {product.stock > 0 ? 'In Stock - Fast Shipping' : 'Out of Stock'}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -197,7 +209,9 @@ const Featured_Product = () => {
 
           {/* View All Button */}
           <div className="text-center mt-12 animate-fade-in">
-            <button className="group relative uppercase text-white bg-gradient-to-r from-pink-500 to-rose-500 px-10 py-4 rounded-full font-bold overflow-hidden transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105">
+            <button 
+              onClick={() => navigate('/shop')}
+              className="group relative uppercase text-white bg-gradient-to-r from-pink-500 to-rose-500 px-10 py-4 rounded-full font-bold overflow-hidden transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105">
               <span className="relative z-10">View All Products</span>
               <div className="absolute inset-0 bg-gradient-to-r from-rose-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
             </button>

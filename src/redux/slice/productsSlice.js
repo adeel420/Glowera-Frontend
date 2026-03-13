@@ -74,7 +74,9 @@ export const createProduct = createAsyncThunk(
         `${import.meta.env.VITE_SERVER_API}/products`,
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: { 
+            "Content-Type": "multipart/form-data"
+          },
         },
       );
       return response.data;
@@ -94,7 +96,9 @@ export const updateProduct = createAsyncThunk(
         `${import.meta.env.VITE_SERVER_API}/products/${id}`,
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: { 
+            "Content-Type": "multipart/form-data"
+          },
         },
       );
       return response.data;
@@ -111,7 +115,7 @@ export const deleteProduct = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_SERVER_API}/products/${id}`,
+        `${import.meta.env.VITE_SERVER_API}/products/${id}`
       );
       return response.data;
     } catch (error) {

@@ -2,16 +2,23 @@ import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash, FaPlus, FaTimes } from "react-icons/fa";
 import { BiCategory } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories, deleteCategory, updateCategory } from "../../redux/slice/categoriesSlice";
+import {
+  fetchCategories,
+  deleteCategory,
+  updateCategory,
+} from "../../redux/slice/categoriesSlice";
 import toast from "react-hot-toast";
 
 const Categories_Management = () => {
   const dispatch = useDispatch();
-  const { categories, status, error } = useSelector((state) => state.categories);
+  const { categories, status, error } = useSelector(
+    (state) => state.categories,
+  );
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ name: "", image: null });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -35,13 +42,14 @@ const Categories_Management = () => {
       data.append("image", formData.image);
     }
 
+    setIsSubmitting(true);
     try {
       const response = await fetch(
         `${import.meta.env.VITE_SERVER_API}/category`,
         {
           method: "POST",
           body: data,
-        }
+        },
       );
       if (response.ok) {
         toast.success("Category added successfully");
@@ -53,6 +61,8 @@ const Categories_Management = () => {
       }
     } catch (err) {
       toast.error("Error adding category");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -75,7 +85,11 @@ const Categories_Management = () => {
       data.append("image", formData.image);
     }
 
-    const result = await dispatch(updateCategory({ id: editingId, formData: data }));
+    setIsSubmitting(true);
+    const result = await dispatch(
+      updateCategory({ id: editingId, formData: data }),
+    );
+    setIsSubmitting(false);
     if (result.type === updateCategory.fulfilled.type) {
       toast.success("Category updated successfully");
       setFormData({ name: "", image: null });
@@ -112,7 +126,9 @@ const Categories_Management = () => {
         <div className="bg-gradient-to-br from-pink-500 to-rose-500 text-white rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:scale-105 transition-all animate-fade-in-up">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white/80 text-sm uppercase tracking-wide">Total Categories</p>
+              <p className="text-white/80 text-sm uppercase tracking-wide">
+                Total Categories
+              </p>
               <p className="text-4xl font-bold mt-2">{categories.length}</p>
             </div>
             <BiCategory className="text-5xl opacity-30" />
@@ -122,7 +138,9 @@ const Categories_Management = () => {
         <div className="bg-gradient-to-br from-green-500 to-green-400 text-white rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:scale-105 transition-all animate-fade-in-up animation-delay-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white/80 text-sm uppercase tracking-wide">Active</p>
+              <p className="text-white/80 text-sm uppercase tracking-wide">
+                Active
+              </p>
               <p className="text-4xl font-bold mt-2">{categories.length}</p>
             </div>
             <BiCategory className="text-5xl opacity-30" />
@@ -132,7 +150,9 @@ const Categories_Management = () => {
         <div className="bg-gradient-to-br from-orange-500 to-orange-400 text-white rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:scale-105 transition-all animate-fade-in-up animation-delay-400">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white/80 text-sm uppercase tracking-wide">Inactive</p>
+              <p className="text-white/80 text-sm uppercase tracking-wide">
+                Inactive
+              </p>
               <p className="text-4xl font-bold mt-2">0</p>
             </div>
             <BiCategory className="text-5xl opacity-30" />
@@ -148,7 +168,7 @@ const Categories_Management = () => {
             setShowEditForm(false);
             setFormData({ name: "", image: null });
           }}
-          className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-4 rounded-2xl font-bold uppercase tracking-wide hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center gap-3"
+          className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-4 rounded-2xl font-bold uppercase tracking-wide cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center gap-3"
         >
           <FaPlus /> Add New Category
         </button>
@@ -165,7 +185,9 @@ const Categories_Management = () => {
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 className="w-full px-4 py-3 border-2 border-pink-200 rounded-xl focus:outline-none focus:border-pink-500 transition-all"
                 placeholder="Enter category name"
               />
@@ -176,7 +198,9 @@ const Categories_Management = () => {
               </label>
               <input
                 type="file"
-                onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
+                onChange={(e) =>
+                  setFormData({ ...formData, image: e.target.files[0] })
+                }
                 className="w-full px-4 py-3 border-2 border-pink-200 rounded-xl focus:outline-none focus:border-pink-500 transition-all"
                 accept="image/*"
               />
@@ -184,14 +208,42 @@ const Categories_Management = () => {
             <div className="flex gap-3">
               <button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-xl font-bold hover:shadow-lg transition-all"
+                disabled={isSubmitting}
+                className="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Add Category
+                {isSubmitting ? (
+                  <>
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Adding...
+                  </>
+                ) : (
+                  "Add Category"
+                )}
               </button>
               <button
                 type="button"
                 onClick={() => setShowAddForm(false)}
-                className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all"
+                disabled={isSubmitting}
+                className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>
@@ -226,7 +278,9 @@ const Categories_Management = () => {
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 className="w-full px-4 py-3 border-2 border-pink-200 rounded-xl focus:outline-none focus:border-pink-500 transition-all"
                 placeholder="Enter category name"
               />
@@ -237,7 +291,9 @@ const Categories_Management = () => {
               </label>
               <input
                 type="file"
-                onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
+                onChange={(e) =>
+                  setFormData({ ...formData, image: e.target.files[0] })
+                }
                 className="w-full px-4 py-3 border-2 border-pink-200 rounded-xl focus:outline-none focus:border-pink-500 transition-all"
                 accept="image/*"
               />
@@ -245,9 +301,36 @@ const Categories_Management = () => {
             <div className="flex gap-3">
               <button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-xl font-bold hover:shadow-lg transition-all"
+                disabled={isSubmitting}
+                className="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Update Category
+                {isSubmitting ? (
+                  <>
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Updating...
+                  </>
+                ) : (
+                  "Update Category"
+                )}
               </button>
               <button
                 type="button"
@@ -256,7 +339,8 @@ const Categories_Management = () => {
                   setEditingId(null);
                   setFormData({ name: "", image: null });
                 }}
-                className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all"
+                disabled={isSubmitting}
+                className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>
@@ -299,18 +383,20 @@ const Categories_Management = () => {
                   Active
                 </span>
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-2">{category.name}</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">
+                {category.name}
+              </h3>
               <p className="text-sm text-gray-600 mb-4">ID: {category._id}</p>
               <div className="flex gap-2">
                 <button
                   onClick={() => handleEditCategory(category)}
-                  className="flex-1 bg-gradient-to-r from-pink-100 to-rose-100 text-pink-600 py-3 rounded-xl font-bold hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all flex items-center justify-center gap-2"
+                  className="flex-1 bg-gradient-to-r from-pink-100 to-rose-100 text-pink-600 py-3 rounded-xl font-bold hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all flex items-center cursor-pointer justify-center gap-2"
                 >
                   <FaEdit /> Edit
                 </button>
                 <button
                   onClick={() => handleDeleteCategory(category._id)}
-                  className="flex-1 bg-red-50 text-red-600 py-3 rounded-xl font-bold hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-2"
+                  className="flex-1 bg-red-50 text-red-600 py-3 rounded-xl font-bold hover:bg-red-600 hover:text-white transition-all cursor-pointer flex items-center justify-center gap-2"
                 >
                   <FaTrash /> Delete
                 </button>

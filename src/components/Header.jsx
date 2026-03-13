@@ -247,7 +247,7 @@ const Header = () => {
                         <button
                           key={category._id}
                           onClick={() => {
-                            navigate(`/shop?category=${category._id}`);
+                            navigate(`/category/${category._id}`);
                             setIsCategoryDropdownOpen(false);
                           }}
                           className="w-full px-4 py-3 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white text-left flex items-center gap-3 text-gray-700 font-semibold transition-all"

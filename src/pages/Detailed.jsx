@@ -67,6 +67,7 @@ const Detailed = () => {
                 src={selectedProduct?.images?.[selectedImage] || assets.heroImg}
                 className="w-full h-[450px] object-contain transform group-hover:scale-110 transition-transform duration-700"
                 alt="Product"
+                loading="lazy"
               />
             </div>
             <div className="grid grid-cols-4 gap-3">
@@ -81,6 +82,7 @@ const Detailed = () => {
                       : "border-pink-200 hover:border-pink-400"
                   }`}
                   alt={`Thumbnail ${index + 1}`}
+                  loading="lazy"
                 />
               ))}
             </div>

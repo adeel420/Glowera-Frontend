@@ -109,6 +109,7 @@ const Featured_Product = () => {
                       src={product.images?.[0] || assets.heroImg}
                       alt={product.name}
                       className="w-full h-full object-contain transform group-hover:scale-110 group-hover:rotate-2 transition-all duration-700 drop-shadow-lg"
+                      loading="lazy"
                     />
 
                     {/* Discount Badge */}

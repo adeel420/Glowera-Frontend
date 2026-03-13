@@ -2,10 +2,12 @@ import React, { useEffect } from "react";
 import { featuredCategories } from "../../data/Data";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/slice/categoriesSlice";
+import { useNavigate } from "react-router-dom";
 
 const Featured_Category = () => {
   const { status, categories } = useSelector((state) => state.categories);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -36,6 +38,7 @@ const Featured_Category = () => {
               <div
                 key={category._id}
                 className="group flex-shrink-0 flex flex-col items-center p-8 bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer w-[180px] hover:-translate-y-3 border-2 border-transparent hover:border-pink-300 mx-3"
+                onClick={() => navigate(`/category/${category._id}`)}
               >
                 <div className="relative w-[110px] h-[110px] flex items-center justify-center mb-5 rounded-full bg-gradient-to-br from-pink-100 to-rose-100 group-hover:from-pink-200 group-hover:to-rose-200 transition-all duration-500 group-hover:rotate-6 group-hover:scale-110">
                   <img

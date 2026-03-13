@@ -20,10 +20,10 @@ const Featured_Product = () => {
 
   const toggleLike = (productId, e) => {
     e.stopPropagation();
-    setLikedProducts(prev => 
-      prev.includes(productId) 
-        ? prev.filter(id => id !== productId)
-        : [...prev, productId]
+    setLikedProducts((prev) =>
+      prev.includes(productId)
+        ? prev.filter((id) => id !== productId)
+        : [...prev, productId],
     );
   };
 
@@ -56,7 +56,8 @@ const Featured_Product = () => {
           </h1>
 
           <p className="text-white/95 font-light text-[16px] sm:text-[18px] lg:text-[20px] mt-6 max-w-2xl mx-auto animate-fade-in animation-delay-400">
-            Discover our exclusive range of premium skincare products crafted with natural ingredients for radiant, healthy skin.
+            Discover our exclusive range of premium skincare products crafted
+            with natural ingredients for radiant, healthy skin.
           </p>
 
           <button className="group relative uppercase text-pink-600 bg-white border-2 border-white cursor-pointer mt-8 py-4 px-10 rounded-full font-bold hover:bg-transparent hover:text-white transition-all duration-300 shadow-2xl hover:shadow-white/20 transform hover:scale-105 animate-bounce-slow animation-delay-600">
@@ -69,7 +70,7 @@ const Featured_Product = () => {
       <div className="py-20 px-6 bg-gradient-to-br from-white via-pink-50 to-rose-50 relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-pink-200 to-rose-200 rounded-full filter blur-3xl opacity-20"></div>
-        
+
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="text-center mb-16 animate-fade-in-up">
             <h1 className="red-text text-[32px] lg:text-[36px] bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent mb-2">
@@ -78,7 +79,9 @@ const Featured_Product = () => {
             <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
               TRENDING PRODUCTS
             </h1>
-            <p className="text-gray-600 mt-4 text-lg">Loved by thousands of customers</p>
+            <p className="text-gray-600 mt-4 text-lg">
+              Loved by thousands of customers
+            </p>
           </div>
 
           {/* Product Cards */}
@@ -101,13 +104,13 @@ const Featured_Product = () => {
                     {/* Sparkle Effect */}
                     <div className="absolute top-4 right-4 w-2 h-2 bg-pink-400 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping"></div>
                     <div className="absolute bottom-8 left-6 w-1.5 h-1.5 bg-rose-400 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping animation-delay-200"></div>
-                    
+
                     <img
                       src={product.images?.[0] || assets.heroImg}
                       alt={product.name}
                       className="w-full h-full object-contain transform group-hover:scale-110 group-hover:rotate-2 transition-all duration-700 drop-shadow-lg"
                     />
-                    
+
                     {/* Discount Badge */}
                     {product.discountPercentage > 0 && (
                       <div className="absolute top-4 left-4 animate-bounce-slow">
@@ -149,19 +152,27 @@ const Featured_Product = () => {
                         {product.category?.name || "Product"}
                       </span>
                     </div>
-                    
+
                     <h2 className="text-lg font-bold text-gray-800 mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-pink-600 group-hover:to-rose-600 group-hover:bg-clip-text transition-all duration-300 line-clamp-2 min-h-[56px]">
                       {product.title}
                     </h2>
-                    
+
                     {/* Rating */}
                     <div className="flex items-center gap-1 mb-4">
                       <div className="flex">
                         {[...Array(5)].map((_, i) => (
-                          <span key={i} className="text-yellow-400 text-base transform group-hover:scale-110 transition-transform duration-300" style={{ transitionDelay: `${i * 50}ms` }}>★</span>
+                          <span
+                            key={i}
+                            className="text-yellow-400 text-base transform group-hover:scale-110 transition-transform duration-300"
+                            style={{ transitionDelay: `${i * 50}ms` }}
+                          >
+                            ★
+                          </span>
                         ))}
                       </div>
-                      <span className="text-xs text-gray-500 ml-1 font-semibold">(4.9)</span>
+                      <span className="text-xs text-gray-500 ml-1 font-semibold">
+                        (4.9)
+                      </span>
                     </div>
 
                     {/* Price Section */}
@@ -186,8 +197,18 @@ const Featured_Product = () => {
                     {/* Add to Cart Button */}
                     <button className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3.5 rounded-full font-bold opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 hover:shadow-2xl hover:scale-105 relative overflow-hidden">
                       <span className="relative z-10 flex items-center justify-center gap-2">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                          />
                         </svg>
                         Add to Cart
                       </span>
@@ -196,9 +217,13 @@ const Featured_Product = () => {
 
                     {/* Stock Indicator */}
                     <div className="mt-3 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                      <div className={`w-2 h-2 rounded-full animate-pulse ${product.stock > 0 ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                      <div
+                        className={`w-2 h-2 rounded-full animate-pulse ${product.stock > 0 ? "bg-green-500" : "bg-red-500"}`}
+                      ></div>
                       <span className="text-xs text-gray-600 font-medium">
-                        {product.stock > 0 ? 'In Stock - Fast Shipping' : 'Out of Stock'}
+                        {product.stock > 0
+                          ? "In Stock - Fast Shipping"
+                          : "Out of Stock"}
                       </span>
                     </div>
                   </div>
@@ -209,9 +234,10 @@ const Featured_Product = () => {
 
           {/* View All Button */}
           <div className="text-center mt-12 animate-fade-in">
-            <button 
-              onClick={() => navigate('/shop')}
-              className="group relative uppercase text-white bg-gradient-to-r from-pink-500 to-rose-500 px-10 py-4 rounded-full font-bold overflow-hidden transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105">
+            <button
+              onClick={() => navigate("/shop")}
+              className="group relative uppercase text-white bg-gradient-to-r from-pink-500 to-rose-500 px-10 py-4 rounded-full font-bold overflow-hidden transition-all duration-300 shadow-xl hover:shadow-2xl transform cursor-pointer hover:scale-105"
+            >
               <span className="relative z-10">View All Products</span>
               <div className="absolute inset-0 bg-gradient-to-r from-rose-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
             </button>

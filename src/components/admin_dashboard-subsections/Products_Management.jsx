@@ -944,13 +944,15 @@ const Products_Management = () => {
                             {product.title}
                           </p>
                           <p className="text-xs text-gray-500">
-                            {product.subtitle}
+                            {product?.subtitle?.length > 80
+                              ? `${product.subtitle.slice(0, 80)}...`
+                              : product.subtitle}
                           </p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-pink-100 text-pink-700">
+                      <span className="px-3 py-1 whitespace-nowrap rounded-full text-xs font-semibold bg-pink-100 text-pink-700">
                         {product.category?.name || "N/A"}
                       </span>
                     </td>
@@ -968,7 +970,7 @@ const Products_Management = () => {
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`px-4 py-2 rounded-full text-xs font-bold ${
+                        className={`px-4 py-2 whitespace-nowrap rounded-full text-xs font-bold ${
                           product.stock > 10
                             ? "bg-green-100 text-green-800"
                             : product.stock > 0
@@ -976,9 +978,7 @@ const Products_Management = () => {
                               : "bg-red-100 text-red-800"
                         }`}
                       >
-                        {product.stock > 0
-                          ? `${product.stock} in stock`
-                          : "Out of Stock"}
+                        {product.stock > 0 ? `in stock` : "Out of Stock"}
                       </span>
                     </td>
                     <td className="px-6 py-4">

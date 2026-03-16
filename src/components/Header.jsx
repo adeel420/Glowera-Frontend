@@ -12,6 +12,8 @@ import { BiCategory } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../redux/slice/categoriesSlice";
 import { fetchLoginData } from "../redux/slice/authSlices/loginSlice";
+import { fetchAllWishlist } from "../redux/slice/wishlistSlice";
+import { fetchAllCart } from "../redux/slice/cartSlice";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -24,6 +26,20 @@ const Header = () => {
   const token = localStorage.getItem("token");
   const { categories } = useSelector((state) => state.categories);
   const { user } = useSelector((state) => state.login);
+  const { wishlist } = useSelector((state) => state.wishlist);
+  const { cart } = useSelector((state) => state.cart);
+
+  useEffect(() => {
+    if (user?.id) {
+      dispatch(fetchAllWishlist({ userId: user.id }));
+    }
+  }, [dispatch, user?.id]);
+
+  useEffect(() => {
+    if (user?.id) {
+      dispatch(fetchAllCart({ userId: user.id }));
+    }
+  }, [dispatch, user?.id]);
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -96,7 +112,7 @@ const Header = () => {
             onClick={() => navigate("/wishlist")}
           >
             <span className="absolute h-4 w-4 rounded-full right-[-8px] top-[-8px] bg-gradient-to-r from-pink-400 to-rose-400 text-white flex items-center justify-center text-xs font-semibold">
-              3
+              {wishlist?.products?.length || 0}
             </span>
             <IoIosHeartEmpty />
           </span>
@@ -173,7 +189,7 @@ const Header = () => {
             onClick={() => navigate("/cart")}
           >
             <span className="absolute h-4 w-4 rounded-full right-[-8px] top-[-8px] bg-gradient-to-r from-pink-400 to-rose-400 text-white flex items-center justify-center text-xs font-semibold">
-              3
+              {cart?.products?.length || 0}
             </span>
             <IoCartOutline />
           </span>
@@ -206,7 +222,7 @@ const Header = () => {
             onClick={() => navigate("/cart")}
           >
             <span className="absolute h-4 w-4 rounded-full right-[-6px] top-[-6px] bg-gradient-to-r from-pink-400 to-rose-400 text-white flex items-center justify-center text-xs font-semibold">
-              3
+              {cart?.products?.length || 0}
             </span>
             <IoCartOutline />
           </span>
@@ -334,7 +350,7 @@ const Header = () => {
                 }}
               >
                 <span className="absolute h-4 w-4 rounded-full right-[-8px] top-[-8px] bg-gradient-to-r from-pink-400 to-rose-400 text-white flex items-center justify-center text-xs font-semibold">
-                  3
+                  {wishlist?.products?.length || 0}
                 </span>
                 <IoIosHeartEmpty />
               </span>

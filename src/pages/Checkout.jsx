@@ -1,10 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Online_Payment from "../components/checkout-subsections/Online_Payment";
 import Cash_On_Delivery from "../components/checkout-subsections/Cash_On_Delivery";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAccountSettings } from "../redux/slice/accountSlice";
 
 const Checkout = () => {
-  const [selectedMethod, setSelectedMethod] = useState("online");
-  
+  const dispatch = useDispatch();
+  const { settings, status } = useSelector((state) => state.account);
+  const [selectedMethod, setSelectedMethod] = useState(null);
+
+  useEffect(() => {
+    dispatch(fetchAccountSettings());
+  }, [dispatch]);
+
+  // Pehla available method default select karo
+  useEffect(() => {
+    if (settings?.accountSelection?.length > 0) {
+      setSelectedMethod(settings.accountSelection[0]);
+    }
+  }, [settings]);
+
+  const availableMethods = settings?.accountSelection || [];
+
   return (
     <div className="py-16 px-6 bg-gradient-to-br from-pink-50 via-white to-rose-50 min-h-screen relative overflow-hidden">
       {/* Background Animation */}
@@ -27,136 +44,97 @@ const Checkout = () => {
           </p>
         </div>
 
+        {/* Loading */}
+        {status === "loading" && (
+          <div className="flex justify-center items-center h-40">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent"></div>
+          </div>
+        )}
+
+        {/* No payment method enabled */}
+        {status !== "loading" && availableMethods.length === 0 && (
+          <div className="bg-white rounded-3xl shadow-lg border-2 border-pink-200 p-12 text-center max-w-xl mx-auto">
+            <p className="text-5xl mb-4">⚠️</p>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">No Payment Method Available</h3>
+            <p className="text-gray-500 text-sm">Please contact the store admin to enable payment methods.</p>
+          </div>
+        )}
+
         {/* Payment Method Selection */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {/* Online Payment */}
-          <div
-            className={`group relative p-8 rounded-3xl cursor-pointer transition-all duration-500 transform hover:scale-105 animate-fade-in-up ${
-              selectedMethod === "online"
-                ? "bg-gradient-to-br from-pink-500 to-rose-500 shadow-2xl"
-                : "bg-white shadow-lg hover:shadow-2xl border-2 border-pink-100"
-            }`}
-            onClick={() => setSelectedMethod("online")}
-          >
-            {/* Checkmark */}
-            <div
-              className={`absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-                selectedMethod === "online"
-                  ? "bg-white text-pink-500"
-                  : "bg-pink-100 text-transparent"
-              }`}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
+        {status !== "loading" && availableMethods.length > 0 && (
+          <>
+            <div className={`grid grid-cols-1 ${availableMethods.length === 2 ? "md:grid-cols-2" : "max-w-md mx-auto"} gap-8 mb-12`}>
 
-            <div className="text-center">
-              <div
-                className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 transition-all duration-500 ${
-                  selectedMethod === "online"
-                    ? "bg-white/20 backdrop-blur-sm"
-                    : "bg-gradient-to-br from-pink-400 to-rose-400"
-                }`}
-              >
-                <svg
-                  className={`w-12 h-12 ${selectedMethod === "online" ? "text-white" : "text-white"}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              {/* Online Payment Card */}
+              {availableMethods.includes("online") && (
+                <div
+                  className={`group relative p-8 rounded-3xl cursor-pointer transition-all duration-500 transform hover:scale-105 animate-fade-in-up ${
+                    selectedMethod === "online"
+                      ? "bg-gradient-to-br from-pink-500 to-rose-500 shadow-2xl"
+                      : "bg-white shadow-lg hover:shadow-2xl border-2 border-pink-100"
+                  }`}
+                  onClick={() => setSelectedMethod("online")}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                  />
-                </svg>
-              </div>
-              <h3
-                className={`text-2xl font-bold uppercase tracking-wide mb-2 ${
-                  selectedMethod === "online" ? "text-white" : "text-gray-800"
-                }`}
-              >
-                Online Payment
-              </h3>
-              <p
-                className={`text-sm ${
-                  selectedMethod === "online" ? "text-white/90" : "text-gray-600"
-                }`}
-              >
-                Pay securely with card or digital wallet
-              </p>
-            </div>
-          </div>
+                  <div className={`absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${selectedMethod === "online" ? "bg-white text-pink-500" : "bg-pink-100 text-transparent"}`}>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <div className="text-center">
+                    <div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 transition-all duration-500 ${selectedMethod === "online" ? "bg-white/20 backdrop-blur-sm" : "bg-gradient-to-br from-pink-400 to-rose-400"}`}>
+                      <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                      </svg>
+                    </div>
+                    <h3 className={`text-2xl font-bold uppercase tracking-wide mb-2 ${selectedMethod === "online" ? "text-white" : "text-gray-800"}`}>
+                      Online Payment
+                    </h3>
+                    <p className={`text-sm ${selectedMethod === "online" ? "text-white/90" : "text-gray-600"}`}>
+                      Pay via bank transfer
+                    </p>
+                  </div>
+                </div>
+              )}
 
-          {/* Cash on Delivery */}
-          <div
-            className={`group relative p-8 rounded-3xl cursor-pointer transition-all duration-500 transform hover:scale-105 animate-fade-in-up animation-delay-200 ${
-              selectedMethod === "cod"
-                ? "bg-gradient-to-br from-pink-500 to-rose-500 shadow-2xl"
-                : "bg-white shadow-lg hover:shadow-2xl border-2 border-pink-100"
-            }`}
-            onClick={() => setSelectedMethod("cod")}
-          >
-            {/* Checkmark */}
-            <div
-              className={`absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-                selectedMethod === "cod"
-                  ? "bg-white text-pink-500"
-                  : "bg-pink-100 text-transparent"
-              }`}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-
-            <div className="text-center">
-              <div
-                className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 transition-all duration-500 ${
-                  selectedMethod === "cod"
-                    ? "bg-white/20 backdrop-blur-sm"
-                    : "bg-gradient-to-br from-pink-400 to-rose-400"
-                }`}
-              >
-                <svg
-                  className={`w-12 h-12 ${selectedMethod === "cod" ? "text-white" : "text-white"}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              {/* Cash on Delivery Card */}
+              {availableMethods.includes("cod") && (
+                <div
+                  className={`group relative p-8 rounded-3xl cursor-pointer transition-all duration-500 transform hover:scale-105 animate-fade-in-up animation-delay-200 ${
+                    selectedMethod === "cod"
+                      ? "bg-gradient-to-br from-pink-500 to-rose-500 shadow-2xl"
+                      : "bg-white shadow-lg hover:shadow-2xl border-2 border-pink-100"
+                  }`}
+                  onClick={() => setSelectedMethod("cod")}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-              </div>
-              <h3
-                className={`text-2xl font-bold uppercase tracking-wide mb-2 ${
-                  selectedMethod === "cod" ? "text-white" : "text-gray-800"
-                }`}
-              >
-                Cash on Delivery
-              </h3>
-              <p
-                className={`text-sm ${
-                  selectedMethod === "cod" ? "text-white/90" : "text-gray-600"
-                }`}
-              >
-                Pay when you receive your order
-              </p>
+                  <div className={`absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${selectedMethod === "cod" ? "bg-white text-pink-500" : "bg-pink-100 text-transparent"}`}>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <div className="text-center">
+                    <div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 transition-all duration-500 ${selectedMethod === "cod" ? "bg-white/20 backdrop-blur-sm" : "bg-gradient-to-br from-pink-400 to-rose-400"}`}>
+                      <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                    </div>
+                    <h3 className={`text-2xl font-bold uppercase tracking-wide mb-2 ${selectedMethod === "cod" ? "text-white" : "text-gray-800"}`}>
+                      Cash on Delivery
+                    </h3>
+                    <p className={`text-sm ${selectedMethod === "cod" ? "text-white/90" : "text-gray-600"}`}>
+                      Pay when you receive your order
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        </div>
 
-        {/* Payment Method Content */}
-        <div className="animate-fade-in-up animation-delay-400">
-          {selectedMethod === "online" && <Online_Payment />}
-          {selectedMethod === "cod" && <Cash_On_Delivery />}
-        </div>
+            {/* Payment Method Content */}
+            <div className="animate-fade-in-up animation-delay-400">
+              {selectedMethod === "online" && <Online_Payment bankDetails={settings} />}
+              {selectedMethod === "cod" && <Cash_On_Delivery />}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

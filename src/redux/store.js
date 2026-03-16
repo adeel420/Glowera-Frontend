@@ -6,6 +6,11 @@ import forgetSliceReducer from "./slice/authSlices/forgetSlice";
 import resetSliceReducer from "./slice/authSlices/resetSlice";
 import categoriesSliceReducer from "./slice/categoriesSlice";
 import productsSliceReducer from "./slice/productsSlice";
+import contactSliceReducer from "./slice/contactSlice";
+import newsletterSliceReducer from "./slice/newsletterSlice";
+import accountSliceReducer from "./slice/accountSlice";
+import wishlistSliceReducer from "./slice/wishlistSlice";
+import cartSliceReducer from "./slice/cartSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +21,11 @@ export const store = configureStore({
     reset: resetSliceReducer,
     categories: categoriesSliceReducer,
     products: productsSliceReducer,
+    contact: contactSliceReducer,
+    newsletter: newsletterSliceReducer,
+    account: accountSliceReducer,
+    wishlist: wishlistSliceReducer,
+    cart: cartSliceReducer,
+    wishlist: wishlistSliceReducer,
   },
 });

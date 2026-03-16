@@ -4,6 +4,10 @@ import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "../redux/slice/productsSlice";
 import { useParams } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { fetchLoginData } from "../redux/slice/authSlices/loginSlice";
+import { fetchCreateCart } from "../redux/slice/cartSlice";
+import Loader from "../components/loader/Loader";
 
 const Detailed = () => {
   const [selectedImage, setSelectedImage] = useState(0);
@@ -12,12 +16,42 @@ const Detailed = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [selectedColor, setSelectedColor] = useState(null);
   const { selectedProduct } = useSelector((state) => state.products);
+  const { status } = useSelector((state) => state.cart);
+  const { user } = useSelector((state) => state.login);
   const dispatch = useDispatch();
   const { id } = useParams();
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     dispatch(fetchProductById(id));
   }, [dispatch, id]);
+
+  useEffect(() => {
+    dispatch(fetchLoginData(token));
+  }, [dispatch]);
+
+  const handleCart = async (e) => {
+    e.preventDefault();
+    if (!token) {
+      return toast.error("Please login first");
+    }
+    if (!user?.id) {
+      return toast.error("User not found, please login again");
+    }
+    const result = await dispatch(
+      fetchCreateCart({
+        products: selectedProduct?._id,
+        quantity,
+        user: user?.id,
+        color: selectedColor,
+      }),
+    );
+    if (fetchCreateCart.fulfilled.match(result)) {
+      toast.success("Added to cart successfully!");
+    } else {
+      toast.error(result.payload?.error || "Failed to add to cart");
+    }
+  };
 
   useEffect(() => {
     if (selectedProduct?.colors?.length > 0) {
@@ -56,6 +90,7 @@ const Detailed = () => {
 
   return (
     <div className="bg-gradient-to-br from-pink-50 via-white to-rose-50 py-12 px-6">
+      {status === "loading" && <Loader />}
       <div className="max-w-7xl mx-auto">
         {/* Product Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white rounded-3xl shadow-xl p-8 border-2 border-pink-100 animate-fade-in-up">
@@ -189,7 +224,7 @@ const Detailed = () => {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 rounded-full bg-pink-100 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all font-semibold"
+                    className="w-10 h-10 cursor-pointer rounded-full bg-pink-100 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all font-semibold"
                   >
                     −
                   </button>
@@ -198,7 +233,7 @@ const Detailed = () => {
                   </span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-10 h-10 rounded-full bg-pink-100 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all font-semibold"
+                    className="w-10 h-10 cursor-pointer rounded-full bg-pink-100 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all font-semibold"
                   >
                     +
                   </button>
@@ -225,12 +260,15 @@ const Detailed = () => {
             </div>
 
             <div className="flex gap-4">
-              <button className="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 rounded-full font-bold uppercase tracking-wide hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+              <button
+                className="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 rounded-full font-bold uppercase tracking-wide cursor-pointer hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+                onClick={handleCart}
+              >
                 Add to Cart
               </button>
               <button
                 onClick={() => setIsLiked(!isLiked)}
-                className="w-14 h-14 border-2 border-pink-300 rounded-full hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:border-transparent hover:text-white transition-all flex items-center justify-center group"
+                className="w-14 h-14 border-2 cursor-pointer border-pink-300 rounded-full hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:border-transparent hover:text-white transition-all flex items-center justify-center group"
               >
                 {isLiked ? (
                   <IoHeart className="text-2xl text-pink-500 group-hover:text-white" />

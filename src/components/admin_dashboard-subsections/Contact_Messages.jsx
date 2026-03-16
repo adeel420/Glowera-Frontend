@@ -1,44 +1,111 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { GoMail } from "react-icons/go";
-import { FaEye, FaTrash } from "react-icons/fa";
+import { FaEye, FaTrash, FaPhone, FaTimes } from "react-icons/fa";
+import { IoSearchOutline } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchGetAllContacts,
+  deleteContact,
+} from "../../redux/slice/contactSlice";
 
 const Contact_Messages = () => {
+  const { contacts, status } = useSelector((state) => state.contact);
+  const dispatch = useDispatch();
+  const [search, setSearch] = useState("");
+  const [selectedMessage, setSelectedMessage] = useState(null);
+
+  useEffect(() => {
+    dispatch(fetchGetAllContacts());
+  }, [dispatch]);
+
+  const filtered = contacts.filter((c) => {
+    const q = search.toLowerCase();
+    return (
+      c.firstName?.toLowerCase().includes(q) ||
+      c.lastName?.toLowerCase().includes(q) ||
+      c.email?.toLowerCase().includes(q) ||
+      c.phone?.includes(q) ||
+      c.message?.toLowerCase().includes(q)
+    );
+  });
+
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this message?")) {
+      dispatch(deleteContact(id));
+    }
+  };
+
+  const formatDate = (dateStr) => {
+    return new Date(dateStr).toLocaleDateString("en-PK", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   return (
     <div className="animate-fade-in-up">
-      <div className="mb-8">
-        <h2 className="text-4xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2">
+      <div className="mb-6">
+        <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-1">
           Contact Messages
         </h2>
-        <p className="text-gray-600">View and manage customer inquiries</p>
+        <p className="text-gray-500 text-sm">
+          View and manage customer inquiries
+        </p>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-gradient-to-br from-pink-500 to-rose-500 text-white rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:scale-105 transition-all animate-fade-in-up">
+      {/* Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+        <div className="bg-gradient-to-br from-pink-500 to-rose-500 text-white rounded-2xl p-5 shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white/80 text-sm uppercase tracking-wide">Total Messages</p>
-              <p className="text-4xl font-bold mt-2">45</p>
+              <p className="text-white/80 text-xs uppercase tracking-wide">
+                Total Messages
+              </p>
+              <p className="text-4xl font-bold mt-1">{contacts.length}</p>
             </div>
             <GoMail className="text-5xl opacity-30" />
           </div>
         </div>
-
-        <div className="bg-gradient-to-br from-yellow-500 to-yellow-400 text-white rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:scale-105 transition-all animate-fade-in-up animation-delay-200">
+        <div className="bg-gradient-to-br from-blue-500 to-blue-400 text-white rounded-2xl p-5 shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white/80 text-sm uppercase tracking-wide">Unread</p>
-              <p className="text-4xl font-bold mt-2">8</p>
+              <p className="text-white/80 text-xs uppercase tracking-wide">
+                Today
+              </p>
+              <p className="text-4xl font-bold mt-1">
+                {
+                  contacts.filter(
+                    (c) =>
+                      new Date(c.createdAt).toDateString() ===
+                      new Date().toDateString(),
+                  ).length
+                }
+              </p>
             </div>
             <GoMail className="text-5xl opacity-30" />
           </div>
         </div>
-
-        <div className="bg-gradient-to-br from-green-500 to-green-400 text-white rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:scale-105 transition-all animate-fade-in-up animation-delay-400">
+        <div className="bg-gradient-to-br from-purple-500 to-purple-400 text-white rounded-2xl p-5 shadow-lg sm:col-span-2 md:col-span-1">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white/80 text-sm uppercase tracking-wide">Replied</p>
-              <p className="text-4xl font-bold mt-2">37</p>
+              <p className="text-white/80 text-xs uppercase tracking-wide">
+                This Month
+              </p>
+              <p className="text-4xl font-bold mt-1">
+                {
+                  contacts.filter((c) => {
+                    const d = new Date(c.createdAt);
+                    const now = new Date();
+                    return (
+                      d.getMonth() === now.getMonth() &&
+                      d.getFullYear() === now.getFullYear()
+                    );
+                  }).length
+                }
+              </p>
             </div>
             <GoMail className="text-5xl opacity-30" />
           </div>
@@ -46,60 +113,159 @@ const Contact_Messages = () => {
       </div>
 
       {/* Search */}
-      <div className="mb-6 animate-fade-in-up animation-delay-600">
+      <div className="relative mb-5">
+        <IoSearchOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-pink-400 text-xl" />
         <input
           type="text"
-          placeholder="Search messages..."
-          className="w-full px-6 py-4 border-2 border-pink-200 rounded-2xl focus:outline-none focus:border-pink-500 transition-all shadow-sm"
+          placeholder="Search by name, email, phone or message..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full pl-12 pr-4 py-3 border-2 border-pink-200 rounded-2xl focus:outline-none focus:border-pink-500 transition-all text-sm"
         />
       </div>
 
       {/* Messages List */}
-      <div className="space-y-4">
-        {[
-          { name: "Sarah Johnson", email: "sarah@example.com", subject: "Product Inquiry", date: "2024-01-15", status: "Unread" },
-          { name: "Michael Brown", email: "michael@example.com", subject: "Order Issue", date: "2024-01-14", status: "Replied" },
-          { name: "Emily Davis", email: "emily@example.com", subject: "Shipping Question", date: "2024-01-13", status: "Unread" },
-        ].map((message, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-2xl shadow-lg border-2 border-pink-200 p-6 hover:shadow-2xl transition-all animate-fade-in-up"
-            style={{ animationDelay: `${(index + 8) * 100}ms` }}
-          >
-            <div className="flex items-start justify-between">
-              <div className="flex items-start gap-4 flex-1">
-                <div className="w-14 h-14 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                  {message.name.charAt(0)}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-bold text-gray-800 text-lg">{message.name}</h3>
-                    <span className={`px-4 py-1 rounded-full text-xs font-bold ${
-                      message.status === "Unread" ? "bg-yellow-100 text-yellow-800" : "bg-green-100 text-green-800"
-                    }`}>
-                      {message.status}
-                    </span>
+      {status === "loading" ? (
+        <div className="flex justify-center items-center h-48">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent"></div>
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="bg-white rounded-2xl border-2 border-pink-200 p-12 text-center">
+          <GoMail className="text-6xl text-gray-300 mx-auto mb-3" />
+          <p className="text-gray-500 font-semibold">No messages found</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {filtered.map((msg, index) => (
+            <div
+              key={msg._id}
+              className="bg-white rounded-2xl shadow border-2 border-pink-100 hover:border-pink-300 hover:shadow-lg transition-all p-4 md:p-5"
+              style={{ animationDelay: `${index * 60}ms` }}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3 flex-1 min-w-0">
+                  {/* Avatar */}
+                  <div className="w-12 h-12 flex-shrink-0 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow">
+                    {msg.firstName?.charAt(0).toUpperCase()}
                   </div>
-                  <p className="text-sm text-gray-600 mb-2 flex items-center gap-2">
-                    <GoMail className="text-pink-500" />
-                    {message.email}
-                  </p>
-                  <p className="text-gray-800 font-semibold mb-2">{message.subject}</p>
-                  <p className="text-xs text-gray-500">{message.date}</p>
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-gray-800 text-base truncate">
+                      {msg.firstName} {msg.lastName}
+                    </h3>
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1">
+                      <span className="text-xs text-gray-500 flex items-center gap-1">
+                        <GoMail className="text-pink-400" /> {msg.email}
+                      </span>
+                      <span className="text-xs text-gray-500 flex items-center gap-1">
+                        <FaPhone className="text-pink-400 text-[10px]" />{" "}
+                        {msg.phone}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                      {msg.message}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      {formatDate(msg.createdAt)}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex gap-2">
-                <button className="text-pink-600 hover:text-pink-800 transition-colors p-2 hover:bg-pink-50 rounded-lg" title="View">
-                  <FaEye />
-                </button>
-                <button className="text-red-600 hover:text-red-800 transition-colors p-2 hover:bg-red-50 rounded-lg" title="Delete">
-                  <FaTrash />
-                </button>
+
+                {/* Actions */}
+                <div className="flex flex-col sm:flex-row gap-2 flex-shrink-0">
+                  <button
+                    onClick={() => setSelectedMessage(msg)}
+                    className="p-2 text-pink-500 hover:bg-pink-50 cursor-pointer rounded-lg transition-all"
+                    title="View"
+                  >
+                    <FaEye />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(msg._id)}
+                    className="p-2 text-red-500 hover:bg-red-50 rounded-lg cursor-pointer transition-all"
+                    title="Delete"
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
               </div>
             </div>
+          ))}
+        </div>
+      )}
+
+      {/* View Modal */}
+      {selectedMessage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg border-2 border-pink-200 animate-fade-in-up">
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-pink-500 to-rose-500 p-5 rounded-t-2xl flex items-center justify-between">
+              <h3 className="text-white font-bold text-lg">Message Details</h3>
+              <button
+                onClick={() => setSelectedMessage(null)}
+                className="text-white hover:bg-white/20 p-1.5 rounded-lg cursor-pointer transition-all"
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 space-y-4">
+              {/* Avatar + Name */}
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                  {selectedMessage.firstName?.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <h4 className="text-xl font-bold text-gray-800">
+                    {selectedMessage.firstName} {selectedMessage.lastName}
+                  </h4>
+                  <p className="text-xs text-gray-400">
+                    {formatDate(selectedMessage.createdAt)}
+                  </p>
+                </div>
+              </div>
+
+              {/* Details */}
+              <div className="bg-pink-50 rounded-xl p-4 space-y-2">
+                <div className="flex items-center gap-3">
+                  <GoMail className="text-pink-500 flex-shrink-0" />
+                  <span className="text-sm text-gray-700">
+                    {selectedMessage.email}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <FaPhone className="text-pink-500 flex-shrink-0 text-xs" />
+                  <span className="text-sm text-gray-700">
+                    {selectedMessage.phone}
+                  </span>
+                </div>
+              </div>
+
+              {/* Message */}
+              <div>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                  Message
+                </p>
+                <div className="bg-gray-50 border border-pink-100 rounded-xl p-4">
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    {selectedMessage.message}
+                  </p>
+                </div>
+              </div>
+
+              {/* Reply Button */}
+              <a
+                href={`mailto:${selectedMessage.email}?subject=Re: Your message to Glowera`}
+                className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-xl font-bold hover:shadow-lg cursor-pointer transition-all"
+              >
+                <GoMail className="text-lg" /> Reply via Email
+              </a>
+            </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

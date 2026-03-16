@@ -5,6 +5,8 @@ import {
   fetchAllProducts,
   fetchProductsByColor,
 } from "../redux/slice/productsSlice";
+import { fetchCreateWishlist, fetchAllWishlist } from "../redux/slice/wishlistSlice";
+import { fetchLoginData } from "../redux/slice/authSlices/loginSlice";
 import { IoHeartOutline, IoHeart } from "react-icons/io5";
 import toast from "react-hot-toast";
 
@@ -12,9 +14,12 @@ const Shop = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { products, status, error } = useSelector((state) => state.products);
+  const { wishlist } = useSelector((state) => state.wishlist);
+  const { user } = useSelector((state) => state.login);
   const [likedProducts, setLikedProducts] = useState([]);
   const [selectedColor, setSelectedColor] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -22,21 +27,37 @@ const Shop = () => {
 
   useEffect(() => {
     dispatch(fetchAllProducts());
+    dispatch(fetchLoginData(token));
   }, [dispatch]);
 
   useEffect(() => {
-    if (error) {
-      toast.error(error);
-    }
+    if (user?.id) dispatch(fetchAllWishlist({ userId: user.id }));
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (error) toast.error(error);
   }, [error]);
 
-  const toggleLike = (productId, e) => {
+  useEffect(() => {
+    if (wishlist?.products) {
+      setLikedProducts(wishlist.products.map((p) => p.product._id));
+    }
+  }, [wishlist]);
+
+  const toggleLike = async (productId, e) => {
     e.stopPropagation();
+    if (!token) return toast.error("Please login first");
     setLikedProducts((prev) =>
       prev.includes(productId)
         ? prev.filter((id) => id !== productId)
         : [...prev, productId],
     );
+    const result = await dispatch(fetchCreateWishlist({ user: user.id, product: productId }));
+    if (fetchCreateWishlist.fulfilled.match(result)) {
+      toast.success("Added to wishlist!");
+    } else {
+      toast.error(result.payload?.error || "Failed to add to wishlist");
+    }
   };
 
   const handleColorFilter = (colorName) => {

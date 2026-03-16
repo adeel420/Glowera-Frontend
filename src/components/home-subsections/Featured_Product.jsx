@@ -4,27 +4,48 @@ import { useNavigate } from "react-router-dom";
 import { IoHeartOutline, IoHeart, IoEyeOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllProducts } from "../../redux/slice/productsSlice";
+import { fetchLoginData } from "../../redux/slice/authSlices/loginSlice";
+import { toast } from "react-hot-toast";
+import { fetchCreateWishlist } from "../../redux/slice/wishlistSlice";
 
 const Featured_Product = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [likedProducts, setLikedProducts] = useState([]);
   const { products } = useSelector((state) => state.products);
+  const { wishlist } = useSelector((state) => state.wishlist);
+  const { user } = useSelector((state) => state.login);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     dispatch(fetchAllProducts());
   }, [dispatch]);
 
+  useEffect(() => {
+    dispatch(fetchLoginData(token));
+  }, [dispatch]);
+
   // Get latest 8 products
   const featuredProducts = products.slice(0, 8);
 
-  const toggleLike = (productId, e) => {
+  const toggleLike = async (productId, e) => {
     e.stopPropagation();
+    if (!token) {
+      return toast.error("please login first");
+    }
     setLikedProducts((prev) =>
       prev.includes(productId)
         ? prev.filter((id) => id !== productId)
         : [...prev, productId],
     );
+    const result = await dispatch(
+      fetchCreateWishlist({ user: user.id, product: productId }),
+    );
+    if (fetchCreateWishlist.fulfilled.match(result)) {
+      toast.success("Added to wishlist!");
+    } else {
+      toast.error(result.payload?.error || "Failed to add to wishlist");
+    }
   };
 
   return (
@@ -127,10 +148,10 @@ const Featured_Product = () => {
                     {/* Quick Actions */}
                     <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-8 group-hover:translate-x-0">
                       <button
-                        onClick={(e) => toggleLike(product.id, e)}
+                        onClick={(e) => toggleLike(product._id, e)}
                         className="bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all duration-300 transform hover:scale-125 hover:rotate-12"
                       >
-                        {likedProducts.includes(product.id) ? (
+                        {likedProducts.includes(product._id) ? (
                           <IoHeart className="text-pink-500" size={20} />
                         ) : (
                           <IoHeartOutline size={20} />

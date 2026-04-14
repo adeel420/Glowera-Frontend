@@ -11,6 +11,7 @@ import newsletterSliceReducer from "./slice/newsletterSlice";
 import accountSliceReducer from "./slice/accountSlice";
 import wishlistSliceReducer from "./slice/wishlistSlice";
 import cartSliceReducer from "./slice/cartSlice";
+import orderSliceReducer from "./slice/orderSlice";
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ export const store = configureStore({
     account: accountSliceReducer,
     wishlist: wishlistSliceReducer,
     cart: cartSliceReducer,
+    order: orderSliceReducer,
     wishlist: wishlistSliceReducer,
   },
 });

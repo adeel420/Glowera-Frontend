@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { Toaster } from "react-hot-toast";
 import Loader from "./components/loader/Loader";
+import User_Dashboard from "./pages/User_Dashboard";
 
 // Lazy load pages
 const Home = lazy(() => import("./pages/Home"));
@@ -66,6 +67,7 @@ function App() {
           <Route path="/reset-password" element={<Reset_Password />} />
           <Route path="/detail/:id" element={<Detailed />} />
           <Route path="/admin-dashboard" element={<Admin_Dashboard />} />
+          <Route path="/dashboard" element={<User_Dashboard />} />
           <Route path="/*" element={<Page_Not_Found />} />
         </Routes>
       </Suspense>

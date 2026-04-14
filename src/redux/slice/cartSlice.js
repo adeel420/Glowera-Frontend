@@ -28,13 +28,14 @@ export const fetchAllCart = createAsyncThunk(
   }
 );
 
+// itemId use karo (cart subdocument _id)
 export const fetchUpdateCartItem = createAsyncThunk(
   "cart/update",
-  async ({ cartId, productId, quantity }, { rejectWithValue }) => {
+  async ({ cartId, itemId, quantity }, { rejectWithValue }) => {
     try {
       const res = await axios.put(`${import.meta.env.VITE_SERVER_API}/cart`, {
         cartId,
-        productId,
+        itemId,
         quantity,
       });
       return res.data.cart;
@@ -44,16 +45,30 @@ export const fetchUpdateCartItem = createAsyncThunk(
   }
 );
 
+// itemId use karo
 export const fetchRemoveFromCart = createAsyncThunk(
   "cart/remove",
-  async ({ cartId, productId }, { rejectWithValue }) => {
+  async ({ cartId, itemId }, { rejectWithValue }) => {
     try {
       const res = await axios.delete(`${import.meta.env.VITE_SERVER_API}/cart`, {
-        data: { cartId, productId },
+        data: { cartId, itemId },
       });
       return res.data.cart;
     } catch (err) {
       return rejectWithValue(err.response?.data || { error: "Failed to remove item" });
+    }
+  }
+);
+
+// Order confirm hone par cart clear karo
+export const fetchClearCart = createAsyncThunk(
+  "cart/clear",
+  async ({ userId }, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_SERVER_API}/cart/clear`, { userId });
+      return res.data.cart;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || { error: "Failed to clear cart" });
     }
   }
 );
@@ -90,6 +105,9 @@ const cartSlice = createSlice({
         state.cart = action.payload;
       })
       .addCase(fetchRemoveFromCart.fulfilled, (state, action) => {
+        state.cart = action.payload;
+      })
+      .addCase(fetchClearCart.fulfilled, (state, action) => {
         state.cart = action.payload;
       });
   },

@@ -161,7 +161,7 @@ const Featured_Product = () => {
                         <IoEyeOutline size={20} />
                       </button>
                     </div>
-
+                    {/* konsa accoount lgana opne chrome chrome mein ha chk kr le 3 opaccoeunt nhain open  it */}
                     {/* Shimmer Effect */}
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-30 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                   </div>
@@ -200,17 +200,17 @@ const Featured_Product = () => {
                     {/* Price Section */}
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
-                        <span className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+                        <span className="text-2xl font-bold whitespace-nowrap bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
                           Rs {product.exactPrice}
                         </span>
                         {product.discountPrice > 0 && (
-                          <span className="text-sm text-gray-400 line-through">
+                          <span className="text-sm whitespace-nowrap text-gray-400 line-through">
                             Rs {product.discountPrice}
                           </span>
                         )}
                       </div>
                       {product.discountPrice > 0 && (
-                        <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                        <span className="text-xs font-bold whitespace-nowrap text-green-600 bg-green-50 px-2 py-1 rounded-full">
                           Save Rs {product.discountPrice}
                         </span>
                       )}

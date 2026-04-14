@@ -28,15 +28,15 @@ const Cart = () => {
 
   const products = cart?.products || [];
 
-  const handleUpdateQuantity = (productId, newQty) => {
+  const handleUpdateQuantity = (itemId, newQty) => {
     if (newQty < 1) return;
     dispatch(
-      fetchUpdateCartItem({ cartId: cart._id, productId, quantity: newQty }),
+      fetchUpdateCartItem({ cartId: cart._id, itemId, quantity: newQty }),
     );
   };
 
-  const handleRemove = (productId) => {
-    dispatch(fetchRemoveFromCart({ cartId: cart._id, productId }));
+  const handleRemove = (itemId) => {
+    dispatch(fetchRemoveFromCart({ cartId: cart._id, itemId }));
   };
 
   const subtotal = products.reduce((sum, item) => {
@@ -149,7 +149,7 @@ const Cart = () => {
                       <button
                         onClick={() =>
                           handleUpdateQuantity(
-                            item.product?._id,
+                            item._id,
                             item.quantity - 1,
                           )
                         }
@@ -163,7 +163,7 @@ const Cart = () => {
                       <button
                         onClick={() =>
                           handleUpdateQuantity(
-                            item.product?._id,
+                            item._id,
                             item.quantity + 1,
                           )
                         }
@@ -182,7 +182,7 @@ const Cart = () => {
                         ).toLocaleString()}
                       </p>
                       <button
-                        onClick={() => handleRemove(item.product?._id)}
+                        onClick={() => handleRemove(item._id)}
                         className="p-2 rounded-full cursor-pointer hover:bg-red-100 text-red-400 hover:text-red-600 transition-all"
                       >
                         <IoTrashOutline size={22} />
@@ -222,14 +222,14 @@ const Cart = () => {
                 </div>
 
                 <button
-                  className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 rounded-full font-bold uppercase tracking-wide hover:shadow-2xl transform hover:scale-105 transition-all duration-300 mb-3"
+                  className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 rounded-full font-bold uppercase tracking-wide hover:shadow-2xl transform hover:scale-105 transition-all duration-300 mb-3 cursor-pointer"
                   onClick={() => navigate("/checkout")}
                 >
                   Proceed to Checkout
                 </button>
 
                 <button
-                  className="w-full bg-white border-2 border-pink-300 text-pink-600 py-4 rounded-full font-bold uppercase tracking-wide hover:bg-pink-50 transition-all duration-300"
+                  className="w-full bg-white border-2 border-pink-300 text-pink-600 py-4 rounded-full cursor-pointer font-bold uppercase tracking-wide hover:bg-pink-50 transition-all duration-300"
                   onClick={() => navigate("/shop")}
                 >
                   Continue Shopping
@@ -238,7 +238,7 @@ const Cart = () => {
                 <div className="mt-6 pt-6 border-t-2 border-pink-200 space-y-3">
                   {[
                     { icon: "✓", text: "Secure Checkout" },
-                    { icon: "🚚", text: "Free Shipping Over Rs 2000" },
+                    // { icon: "🚚", text: "Free Shipping Over Rs 2000" },
                     { icon: "↩", text: "Easy Returns" },
                   ].map((badge) => (
                     <div
